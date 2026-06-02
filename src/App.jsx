@@ -1,8 +1,13 @@
 import { useMemo } from 'react';
 import ExerciseForm from './ExerciseForm';
+import WorkoutCalendar from './WorkoutCalendar';
 import { useLocalStorage } from './useLocalStorage';
 
 const KG_TO_LBS = 2.20462;
+
+function dateKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
 
 function App() {
   const [exercises, setExercises] = useLocalStorage('gym-exercises', []);
@@ -19,7 +24,7 @@ function App() {
   }
 
   function addExercise(exercise) {
-    setExercises(prev => [...prev, { ...exercise, id: crypto.randomUUID() }]);
+    setExercises(prev => [...prev, { ...exercise, id: crypto.randomUUID(), date: dateKey(new Date()) }]);
   }
 
   function removeExercise(id) {
@@ -52,6 +57,8 @@ function App() {
           </ul>
         </div>
       )}
+
+      <WorkoutCalendar exercises={exercises} unit={unit} />
     </div>
   );
 }
