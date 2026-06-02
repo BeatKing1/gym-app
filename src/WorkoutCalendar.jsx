@@ -37,55 +37,41 @@ export default function WorkoutCalendar({ exercises, unit }) {
   const selected = selectedDay ? (byDay[selectedDay] || []) : [];
 
   return (
-    <div style={{ maxWidth: 400, margin: '0 auto 40px', fontFamily: 'sans-serif' }}>
+    <div>
       <h3>Calendar</h3>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+      <div className="cal-nav">
         <button onClick={() => { setViewDate(new Date(year, month - 1, 1)); setSelectedDay(null); }}>‹</button>
         <strong>{monthName}</strong>
         <button onClick={() => { setViewDate(new Date(year, month + 1, 1)); setSelectedDay(null); }}>›</button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4, textAlign: 'center' }}>
+      <div className="cal-grid">
         {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(d => (
-          <div key={d} style={{ fontSize: 12, color: '#888' }}>{d}</div>
+          <div key={d} className="cal-dow">{d}</div>
         ))}
         {cells.map((d, i) => {
           if (d === null) return <div key={`blank-${i}`} />;
           const key = dateKey(new Date(year, month, d));
           const has = !!byDay[key];
           const isSelected = selectedDay === key;
+          const cls = 'cal-day' + (has ? ' has-workout' : '') + (isSelected ? ' selected' : '');
           return (
-            <button
-              key={key}
-              onClick={() => setSelectedDay(isSelected ? null : key)}
-              style={{
-                padding: '8px 0',
-                borderRadius: 8,
-                border: isSelected ? '2px solid #2563eb' : '1px solid #eee',
-                background: has ? '#d1fae5' : '#fff',
-                fontWeight: has ? 'bold' : 'normal',
-                cursor: 'pointer',
-              }}
-            >
-              {d}
-            </button>
+            <button key={key} className={cls} onClick={() => setSelectedDay(isSelected ? null : key)}>{d}</button>
           );
         })}
       </div>
 
       {selectedDay && (
-        <div style={{ marginTop: 12 }}>
+        <div className="cal-detail">
           <strong>{selectedDay}</strong>
           {selected.length === 0 ? (
-            <p style={{ color: '#888' }}>No workout logged this day.</p>
+            <p style={{ color: '#94a3b8' }}>No workout logged this day.</p>
           ) : (
-            <ul style={{ listStyle: 'none', padding: 0, marginTop: 8, display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {selected.map(ex => (
-                <li key={ex.id} style={{ padding: '8px 12px', background: '#f0f9f0', borderRadius: 8 }}>
-                  <strong>{ex.name}</strong> — {ex.reps} reps @ {toDisplay(Number(ex.weight))} {unit}
-                </li>
-              ))}
-            </ul>
+            selected.map(ex => (
+              <div key={ex.id} className="cal-detail-item">
+                <strong>{ex.name}</strong> — {ex.reps} reps @ {toDisplay(Number(ex.weight))} {unit}
+              </div>
+            ))
           )}
         </div>
       )}

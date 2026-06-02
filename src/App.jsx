@@ -32,33 +32,38 @@ function App() {
   }
 
   return (
-    <div style={{ maxWidth: 400, margin: '0 auto', fontFamily: 'sans-serif' }}>
-      <div style={{ textAlign: 'right', margin: '12px 0' }}>
-        Units:{' '}
-        <button onClick={() => setUnit('kg')} disabled={unit === 'kg'}>kg</button>{' '}
+    <div className="app">
+      <h1 className="app-title">Gym Tracker</h1>
+
+      <div className="unit-toggle">
+        <button onClick={() => setUnit('kg')} disabled={unit === 'kg'}>kg</button>
         <button onClick={() => setUnit('lbs')} disabled={unit === 'lbs'}>lbs</button>
       </div>
 
-      <ExerciseForm onAdd={addExercise} unit={unit} />
+      <div className="card">
+        <ExerciseForm onAdd={addExercise} unit={unit} />
+      </div>
 
       {exercises.length > 0 && (
-        <div style={{ margin: '0 auto 40px' }}>
+        <div className="card">
           <h3>Logged Exercises</h3>
-          <p style={{ background: '#eef4ff', padding: '10px 14px', borderRadius: 8 }}>
+          <div className="summary">
             <strong>{exercises.length}</strong> exercise{exercises.length !== 1 ? 's' : ''} · total volume <strong>{toDisplay(totalVolumeKg)} {unit}</strong>
-          </p>
-          <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          </div>
+          <ul className="exercise-list">
             {exercises.map((ex) => (
-              <li key={ex.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', background: '#f0f9f0', borderRadius: 8 }}>
+              <li key={ex.id} className="exercise-item">
                 <span><strong>{ex.name}</strong> — {ex.reps} reps @ {toDisplay(Number(ex.weight))} {unit}</span>
-                <button onClick={() => removeExercise(ex.id)}>✕</button>
+                <button className="remove" onClick={() => removeExercise(ex.id)}>✕</button>
               </li>
             ))}
           </ul>
         </div>
       )}
 
-      <WorkoutCalendar exercises={exercises} unit={unit} />
+      <div className="card">
+        <WorkoutCalendar exercises={exercises} unit={unit} />
+      </div>
     </div>
   );
 }
